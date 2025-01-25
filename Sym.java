@@ -1,20 +1,19 @@
-public class ClassName {
+public class Sym {
     // Fields (instance variables)
-    type variableName;
+    String val;
 
     // Constructor
-    public ClassName(type parameter) {
-        this.variableName = parameter;
+    public Sym(String type) {
+        this.val = type;
     }
 
-    // Methods
-    public returnType methodName(type parameter) {
-        // method body
-        return returnValue;
+    public String getType() {
+        return val;
     }
 
-    // Main method (optional, if this is the main entry point of the program)
-    public static void main(String[] args) {
-        // Code to run when the class is executed
+    // to String to return String type of method
+    @Override
+    public String toString() {
+        return this.getType();
     }
 }
