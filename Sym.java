@@ -14,6 +14,6 @@ public class Sym {
     // to String to return String type of method
     @Override
     public String toString() {
-        return this.getType();
+        return this.val;
     }
 }
