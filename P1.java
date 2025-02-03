@@ -157,10 +157,8 @@ public class P1 {
             System.out.println("Remove scope should have thrown SymTabEmptyException");
             return false;
         } catch (SymTabEmptyException e) {
-            // Expected
+            return true;
         }
-
-        return true;
     }
 
     /**
