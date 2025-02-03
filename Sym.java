@@ -1,19 +1,19 @@
 public class Sym {
     // Fields (instance variables)
-    String val;
+    String type;
 
     // Constructor
     public Sym(String type) {
-        this.val = type;
+        this.type = type;
     }
 
     public String getType() {
-        return val;
+        return this.type;
     }
 
     // to String to return String type of method
     @Override
     public String toString() {
-        return this.val;
+        return this.type;
     }
 }

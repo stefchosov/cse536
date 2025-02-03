@@ -15,12 +15,15 @@ public class SymTab {
         else if(list.get(0).containsKey(name)) {
             throw new SymDuplicateException("we already got this one lil bro");
         }
+        else if (name == null | sym == null) {
+            throw new IllegalArgumentException("name or sym is null");
+        }
         else {
-            list.get(0).put(name, sym);
+            this.list.get(0).put(name, sym);
         }
     }
 
-    public void scope() {
+    public void addScope() {
         HashMap<String, Sym> add = new HashMap<>();
         this.list.add(0, add);
     }
@@ -30,7 +33,7 @@ public class SymTab {
             throw new SymTabEmptyException("that sym ain't in the first map");
         }
         else {
-            return list.get(0).get(name);
+            return this.list.get(0).get(name);
         }
     }
 
@@ -54,9 +57,11 @@ public class SymTab {
     }
 
     public void print() {
-        System.out.print("\"\\n*** SymTab ***\\n\"");
+        System.out.print("\n*** SymTab ***\n");
         for (HashMap<String,Sym> M: this.list) {
-            M.toString();
+            System.out.println(M.toString());
+            System.out.println();
         }
+        System.out.print("\n*** DONE ***\n");
     }
 }
