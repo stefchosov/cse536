@@ -135,7 +135,7 @@ public class P1 {
                 return false;
             }
         } catch (SymTabEmptyException e) {
-            System.out.println("Exception thrown during removeScope: " + e.getMessage());
+            System.out.println("Exception thrown during removeScope - SymTab should not be empty at this point: " + e.getMessage());
             return false;
         }
 
@@ -147,7 +147,7 @@ public class P1 {
                 return false;
             }
         } catch (SymTabEmptyException e) {
-            System.out.println("Exception thrown during removeScope: " + e.getMessage());
+            System.out.println("Exception incorrectly thrown during removeScope - believes it is empty when it is not: " + e.getMessage());
             return false;
         }
 
