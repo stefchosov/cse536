@@ -7,11 +7,18 @@ public class Sym {
         this.type = type;
     }
 
+    /**
+     * This method will return the type of the Sym
+     * @return String type of Sym
+     */
     public String getType() {
         return this.type;
     }
 
-    // to String to return String type of method
+    /**
+     * This method will return the type of the Sym
+     * @return String type of Sym
+     */
     @Override
     public String toString() {
         return this.type;
