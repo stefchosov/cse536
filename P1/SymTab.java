@@ -19,7 +19,8 @@ public class SymTab {
      * @throws SymDuplicateException
      * @throws SymTabEmptyException
      */
-    public void addDecl(String name, Sym sym) throws SymDuplicateException, SymTabEmptyException {
+    public void addDecl(String name, Sym sym) throws 
+    SymDuplicateException, SymTabEmptyException {
         if(this.list.isEmpty()) {
             throw new SymTabEmptyException("List is empty");
         }
@@ -50,7 +51,8 @@ public class SymTab {
      */
     public Sym lookupLocal(String name) throws SymTabEmptyException {
         if(this.list.isEmpty()) {
-            throw new SymTabEmptyException("This Sym does not exist in the first map");
+            throw new SymTabEmptyException("This Sym does not exist" + 
+                                           "in the first map");
         }
         else {
             return this.list.getFirst().get(name);

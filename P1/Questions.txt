@@ -1,3 +1,15 @@
-1. HashMap is correct in this case as look ups and adding elements are O(1) complexity and order does not matter for lookups or SymTab implementation. If we wanted to order the Sym's alphabetically or so, then TreeMap would be preferred with a small hit in performance due to the ordering.
+1. HashMap is correct in this case as look ups and adding elements are O(1) 
+complexity and order does not matter for lookups or SymTab implementation. 
+If we wanted to order the Sym's alphabetically or so, then TreeMap would be 
+preferred with a small hit in performance due to the ordering.
 
-2. Depends on how SymTab is primarily used. I chose LinkedList as adding, removing and looking up local acts in a stack behavior which is great for a linked list as that is just updating pointers to point to the front when a new scope is added vs an array list would be O(n) complexity for those operations as it would require all of the maps to get shifted down the Array. However there is argument for an ArrayList if lookupGlobal is disproportionately used, since traversing through an array is more performant in terms of memory overhead and access as it is all stored in memory sequentially vs a LinkedList its pointed all over the place. Still went with the LinkedList implementation though for the LIFO reasoning.
+2. Depends on how SymTab is primarily used. I chose LinkedList as adding, 
+removing and looking up local acts in a stack behavior which is great for a 
+linked list as that is just updating pointers to point to the front when a new 
+scope is added vs an array list would be O(n) complexity for those operations 
+as it would require all of the maps to get shifted down the Array. However 
+there is argument for an ArrayList if lookupGlobal is disproportionately used, 
+since traversing through an array is more performant in terms of memory overhead
+ and access as it is all stored in memory sequentially vs a LinkedList its 
+ pointed all over the place. Still went with the LinkedList implementation 
+ though for the LIFO reasoning.

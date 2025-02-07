@@ -1,0 +1,27 @@
+
+*** SymTab ***
+{}
+
+*** DONE ***
+
+*** SymTab ***
+{ddd=double}
+{ccc=void}
+{aaa=bool, bbb=int}
+
+*** DONE ***
+
+*** SymTab ***
+{ccc=void}
+{aaa=bool, bbb=int}
+
+*** DONE ***
+
+*** SymTab ***
+{aaa=bool, bbb=int}
+
+*** DONE ***
+
+*** SymTab ***
+
+*** DONE ***
