@@ -1,0 +1,170 @@
+import java_cup.runtime.*; // defines the Symbol class
+
+// The generated scanner will return a Symbol for each token that it finds.
+// A Symbol contains an Object field named value; that field will be of type
+// TokenVal, defined below.
+//
+// A TokenVal object contains the line number on which the token occurs as
+// well as the number of the character on that line that starts the token.
+// Some tokens (literals and IDs) also include the value of the token.
+  
+class TokenVal {
+    // fields
+    int lineNum;
+    int charNum;
+
+    // constructor
+    TokenVal(int lineNum, int charNum) {
+        this.lineNum = lineNum;
+        this.charNum = charNum;
+    }
+}
+  
+class IntLitTokenVal extends TokenVal {
+    // new field: the value of the integer literal
+    int intVal;
+
+    // constructor
+    IntLitTokenVal(int lineNum, int charNum, int intVal) {
+        super(lineNum, charNum);
+        this.intVal = intVal;
+    }
+}
+  
+class IdTokenVal extends TokenVal {
+    // new field: the value of the identifier
+    String idVal;
+
+    // constructor
+    IdTokenVal(int lineNum, int charNum, String idVal) {
+        super(lineNum, charNum);
+        this.idVal = idVal;
+    }
+}
+  
+class StrLitTokenVal extends TokenVal {
+    // new field: the value of the string literal
+    String strVal;
+
+    // constructor
+    StrLitTokenVal(int lineNum, int charNum, String strVal) {
+        super(lineNum, charNum);
+        this.strVal = strVal;
+    }
+}
+  
+// The following class is used to keep track of the character number at 
+// which the current token starts on its line.
+class CharNum {
+    static int num = 1;
+}
+%%
+
+DIGIT=        [0-9]
+LETTER=       [a-zA-Z]
+WHITESPACE=   [\040\t]
+IDENTIFIER=   {LETTER}({LETTER}|{DIGIT}|_)*
+ESCAPED_CHAR= \\[nst'\"\\]
+STRING_CHAR = [^\n\"\\] | {ESCAPED_CHAR}
+STRINGLIT=    \"({STRING_CHAR})*\"
+UNTERM_STRING = \"([^\\\"\n]|{ESCAPED_CHAR})*$
+BAD_ESCAPED_STRING= \"([^\\\"\n]|\\[^nst'\"\\])*\" 
+BAD_UNTERM_STRING = \"([^\\\"\n]|\\[^nst'\"\\])*\\?$ 
+
+%implements java_cup.runtime.Scanner
+%function next_token
+%type java_cup.runtime.Symbol
+
+%eofval{
+return new Symbol(sym.EOF);
+%eofval}
+
+%line
+
+%%
+
+{DIGIT}+  {
+            int val = Integer.parseInt(yytext());
+            if(val < Integer.MAX_VALUE) {
+                Symbol S = new Symbol(sym.INTLIT,
+                                new IntLitTokenVal(yyline+1, CharNum.num, val));
+                CharNum.num += yytext().length();
+            } else {
+                ErrMsg.warn(yyline+1, CharNum.num, "using max integer value: literal too large");
+                Symbol S = new Symbol(sym.INTLIT, new IntLitTokenVal(yyline+1, 
+                                        CharNum.num, Integer.MAX_VALUE));
+                CharNum.num += yytext().length();
+            }
+            return S;
+        }
+
+\n        { CharNum.num = 1; }
+
+{IDENTIFIER} {
+                String ID = yytext();
+                Symbol S = new Symbol(sym.ID,
+                                new IdTokenVal(yytext+1, CharNum.num, ID));
+                CharNum.num += yytext().length();
+                return S;
+}
+
+{WHITESPACE}+  { CharNum.num += yytext().length(); }
+
+"="       { Symbol S = new Symbol(sym.ASSIGN, new TokenVal(yyline+1, CharNum.num));
+            CharNum.num++;
+            return S;
+          }
+        
+.         { ErrMsg.fatal(yyline+1, CharNum.num,
+                         "ignoring illegal character: " + yytext());
+            CharNum.num++;
+          }
+
+{STRINGLIT}  { 
+                Symbol S = new Symbol(sym.STRINGLIT, new StrLitTokenVal(yyline+1, CharNum.num, yytext()));
+                CharNum.num += yytext().length();
+                return S;
+}
+
+{UNTERM_STRING}  { 
+                ErrMsg.fatal(yyline+1, CharNum.num, "unterminated string literal");
+                CharNum.num += yytext().length();
+                // Skip the bad string literal
+}
+
+{BAD_ESCAPED_STRING}  { 
+                ErrMsg.fatal(yyline+1, CharNum.num, "ignoring string literal: contains bad escaped character");
+                CharNum.num += yytext().length();
+                // Skip the bad string literal
+}
+
+{BAD_UNTERM_STRING}  { 
+                ErrMsg.fatal(yyline+1, CharNum.num, "ignoring string literal: contains bad escaped character and unterminated");
+                CharNum.num += yytext().length();
+                // Skip the bad string literal
+}
+
+
+"if"    { return new Symbol(sym.IF, new TokenVal(yyline+1, CharNum.num)); }
+
+"else"  { return new Symbol(sym.ELSE, new TokenVal(yyline+1, CharNum.num)); }
+
+"while" { return new Symbol(sym.WHILE, new TokenVal(yyline+1, CharNum.num)); }
+
+"struct" { return new Symbol(sym.STRUCT, new TokenVal(yyline+1, CharNum.num)); }
+
+"input"  { return new Symbol(sym.INPUT, new TokenVal(yyline+1, CharNum.num)); }
+
+"disp"   { return new Symbol(sym.DISP, new TokenVal(yyline+1, CharNum.num)); }
+
+"void"   { return new Symbol(sym.VOID, new TokenVal(yyline+1, CharNum.num)); }
+
+"boolean" { return new Symbol(sym.BOOLEAN, new TokenVal(yyline+1, CharNum.num)); }
+
+"integer" { return new Symbol(sym.INTEGER, new TokenVal(yyline+1, CharNum.num)); }
+
+"TRUE"   { return new Symbol(sym.TRUE, new TokenVal(yyline+1, CharNum.num)); }
+
+"FALSE" { return new Symbol(sym.FALSE, new TokenVal(yyline+1, CharNum.num)); }
+
+"return" { return new Symbol(sym.RETURN, new TokenVal(yyline+1, CharNum.num)); }
