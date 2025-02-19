@@ -12,10 +12,22 @@ public class P2 {
     public static void main(String[] args) throws IOException {
                                            // exception may be thrown by yylex
         // test all tokens
-        testAllTokens();
         CharNum.num = 1;
+        testAllTokens();
     
         // ADD CALLS TO OTHER TEST METHODS HERE
+        // test comments
+        CharNum.num = 1;
+        testComments();
+
+        CharNum.num = 1;
+        testValidStrings();
+
+        CharNum.num = 1;
+        testIntAndLargeInt();
+
+        CharNum.num = 1;
+        testInvalidCharacter();
     }
 
     /**
@@ -179,6 +191,167 @@ public class P2 {
 
             token = scanner.next_token();
         } // end while
+        outFile.close();
+    }
+
+    /**
+     * Private method to test comments by reading in a file: testComments.in
+     * and printing out the comments to testComments.out
+     * tests many cases of comments and we can verify correctness of the scanner
+     * by comparing with the solution file
+     * @throws IOException when file cannot be opened
+     */
+    private static void testComments() throws IOException {
+        // open input and output files
+        FileReader inFile = null;
+        PrintWriter outFile = null;
+        try {
+            inFile = new FileReader("testComments.in");
+            outFile = new PrintWriter(new FileWriter("testComments.out"));
+        } catch (FileNotFoundException ex) {
+            System.err.println("File testComments.in not found.");
+            System.exit(-1);
+        } catch (IOException ex) {
+            System.err.println("testComments.out cannot be opened.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+        while (token.sym != sym.EOF) {
+            switch (token.sym) {
+            case sym.STRINGLIT: 
+                outFile.println(((StrLitTokenVal)token.value).strVal);
+                break;
+            default:
+                System.out.println("Token symbol: " + token.sym + " Value:" + token.value);
+                System.out.println("!!! UNKNOWN TOKEN !!!");
+            } // end switch
+
+            token = scanner.next_token();
+        } // end while
+        outFile.close();
+    }
+
+    /**
+     * Private method to test valid strings by reading in a file: testString.in
+     * and printing out the valid strings to testString.out
+     * It will error for invalid strings
+     * We can verify correctness of the scanner by comparing with the solution file
+     * @throws IOException when file cannot be opened
+     */
+    private static void testValidStrings() throws IOException {
+        FileReader inFile = null;
+        PrintWriter outFile = null;
+        try {
+            inFile = new FileReader("testString.in");
+            outFile = new PrintWriter(new FileWriter("testString.out"));
+        } catch (FileNotFoundException ex) {
+            System.err.println("File testString.in not found.");
+            System.exit(-1);
+        } catch (IOException ex) {
+            System.err.println("testString.out cannot be opened.");
+            System.exit(-1);
+        }
+        
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+        while (token.sym != sym.EOF) {
+            switch (token.sym){
+            case sym.STRINGLIT: 
+                outFile.println(((StrLitTokenVal)token.value).strVal);
+                break;
+            default:
+                System.out.println("Token symbol: " + token.sym + " Value:" + token.value);
+                System.out.println("!!! UNKNOWN TOKEN !!!");
+            }
+            token = scanner.next_token();
+        }
+        outFile.close();
+    }
+
+    /**
+     * Private method to test int and large int by reading in a file: testInt.in
+     * and printing out the valid ints to: testInt.out
+     * and sending a warning for large ints
+     * It will print the max Large Integer value if the input is too large 
+     * @throws IOException when file cannot be opened
+     */
+    private static void testIntAndLargeInt() throws IOException {
+        FileReader inFile = null;
+        PrintWriter outFile = null;
+        try {
+            inFile = new FileReader("testInt.in");
+            outFile = new PrintWriter(new FileWriter("testInt.out"));
+        } catch (FileNotFoundException ex) {
+            System.err.println("File testInt.in not found.");
+            System.exit(-1);
+        } catch (IOException ex) {
+            System.err.println("testInt.out cannot be opened.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+        while (token.sym != sym.EOF) {
+            switch (token.sym){
+            case sym.INTLIT: 
+                outFile.println(((IntLitTokenVal)token.value).intVal);
+                break;
+            default:
+                System.out.println("Token symbol: " + token.sym + " Value:" + token.value);
+                System.out.println("!!! UNKNOWN TOKEN !!!");
+            }
+            token = scanner.next_token();
+        }
+        outFile.close();
+    }
+
+    /**
+     * Private method to test valid and invalid characters by reading in a file
+     * and printing out the valid tokens and erroring on invalid characters  
+     * @throws IOException when file cannot be opened
+     */
+    private static void testInvalidCharacter() throws IOException {
+        FileReader inFile = null;
+        PrintWriter outFile = null;
+        try {
+            inFile = new FileReader("testInvalidCharacter.in");
+            outFile = new PrintWriter(new FileWriter("testInvalidCharacter.out"));
+        } catch (FileNotFoundException ex) {
+            System.err.println("File testInvalidCharacter.in not found.");
+            System.exit(-1);
+        } catch (IOException ex) {
+            System.err.println("testInvalidCharacter.out cannot be opened.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+        while (token.sym != sym.EOF) {
+            switch (token.sym){
+            case sym.RETURN:
+                outFile.println("return");
+                break;
+            case sym.TRUE:
+                outFile.println("TRUE"); 
+                break;
+            case sym.FALSE:
+                outFile.println("FALSE"); 
+                break;
+            case sym.ID:
+                outFile.println(((IdTokenVal)token.value).idVal);
+                break;
+            default:
+                System.out.println("Token symbol: " + token.sym + " Value:" + token.value);
+                System.out.println("!!! UNKNOWN TOKEN !!!");
+            }
+            token = scanner.next_token();
+        }
         outFile.close();
     }
 }

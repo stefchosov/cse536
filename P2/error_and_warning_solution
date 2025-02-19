@@ -1,0 +1,7 @@
+4:1 ****ERROR**** unterminated string literal
+5:1 ****ERROR**** unterminated string literal
+6:1 ****ERROR**** ignoring string literal: contains bad escaped character
+7:1 ****ERROR**** ignoring string literal: contains bad escaped character and unterminated
+3:1 ****WARNING**** using max integer value: literal too large
+1:1 ****ERROR**** ignoring illegal character: ?
+2:7 ****ERROR**** ignoring illegal character: $

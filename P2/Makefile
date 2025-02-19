@@ -36,15 +36,30 @@ ErrMsg.class: ErrMsg.java
 # to expected results
 ###
 test:
-	java -cp $(CP) P2 
+	java -cp $(CP) P2 2>error_and_warning.out
 	diff allTokens.in allTokens.out
+	diff testComments.out testComments_solution
+	diff testString_solution testString.out
+	diff testInt.out testInt_solution
+	diff testInvalidCharacter.out testInvalidCharacter_solution
+	diff error_and_warning.out error_and_warning_solution
+
+#testcomments:
+#	java -cp $(CP) P2
+#	diff testComments.out testComments_solution
+
+#teststring:
+#	java -cp $(CP) P2 2>StringTestErr.txt
+#	diff testString_solution testString.out
+#	diff StringTestErr.txt errSolution
+
 
 ###
 # clean up
 ###
 
 clean:
-	rm -f *~ *.class bach.jlex.java
+	rm -f *~ *.class bach.jlex.java *.out
 
 cleantest:
-	rm -f allTokens.out
+	rm -f *.out

@@ -1,0 +1,9 @@
+# this should not be a token
+"But this should be one"
+%% this should not be a token a well
+"But this should be"
+"but does it recognize after the item"    # do you see me
+%% how about before "I shouldn't be visible"
+"but does it recognize after the item v2"    %% I shouldn't be noticed!
+#"how about if I make an illegal string does it complain /n /t 29472734900349293472304723472384728347024
+%% I'll copy that again but with the other comment method thingi"""""""
