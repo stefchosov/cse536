@@ -1,0 +1,18 @@
+struct Point [
+    integer x.
+    integer y.
+]
+
+integer f[integer x, boolean b] [
+]
+
+void g[] [
+    integer a.
+    boolean b.
+    struct Point p.
+    (p{Point}):x{integer} = a{integer}.
+    b{boolean} = (a{integer} == 3).
+    f{integer,boolean->integer}((a{integer} + ((p{Point}):y{integer} * 2)), b{boolean}).
+    g{->void}().
+]
+

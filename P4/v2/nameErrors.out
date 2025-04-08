@@ -1,0 +1,45 @@
+integer a.
+void v.
+boolean b.
+boolean a.
+integer c.
+boolean cc.
+struct A [
+    integer a1.
+    integer a2.
+    boolean b1.
+]
+
+struct B [
+    integer b1.
+    struct A a1.
+    struct A a2.
+]
+
+struct B1 bG.
+struct B bG.
+void f12[boolean b, integer a] [
+    struct B b1.
+]
+
+void f1[boolean a, integer c] [
+    integer t1.
+    integer c.
+    struct BB a1.
+    input -> c{integer}.
+    disp <- ((c{integer} + a{boolean})).
+    tt++.
+    t1{integer}--.
+    (bG{B}):b1{integer} = 5.
+    ((bG{B}):a1{A}):a1{integer} = 4.
+    (bG1):b1 = 5.
+    ((bG{B}):a3):a1 = 4.
+    ((bG{B}):a1{A}):a3 = 4.
+    c{integer} = (a{boolean} + 34).
+    if ((a{boolean} == b{boolean})) {
+        integer d.
+        c{integer} = (11 + d{integer}).
+    }
+    f12{boolean,integer->void}((c{integer} == 12)).
+]
+
