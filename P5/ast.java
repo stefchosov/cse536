@@ -710,6 +710,10 @@ class IntegerNode extends TypeNode {
     public void unparse(PrintWriter p, int indent) {
         p.print("integer");
     }
+
+    public Type typeAnalysis(SymTab symTab) {
+        return new IntegerType();
+    }
 }
 
 class VoidNode extends TypeNode {
@@ -725,6 +729,10 @@ class VoidNode extends TypeNode {
 
     public void unparse(PrintWriter p, int indent) {
         p.print("void");
+    }
+
+    public Type typeAnalysis(SymTab symTab) {
+        return new VoidType();
     }
 }
 
@@ -758,7 +766,8 @@ class StructNode extends TypeNode {
 // **********************************************************************
 
 abstract class StmtNode extends ASTnode {
-    abstract public void nameAnalysis(SymTab symTab);  
+    abstract public void nameAnalysis(SymTab symTab);
+    abstract public Type typeAnalysis(SymTab symTab);
 }
 
 class AssignStmtNode extends StmtNode {
@@ -772,6 +781,10 @@ class AssignStmtNode extends StmtNode {
      ****/
     public void nameAnalysis(SymTab symTab) {
         myAssign.nameAnalysis(symTab);
+    }
+
+    public Type typeAnalysis(SymTab symTab) {
+        return myAssign.typeAnalysis(symTab);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -797,6 +810,9 @@ class PostIncStmtNode extends StmtNode {
         myExp.nameAnalysis(symTab);
     }
 
+    public Type typeAnalysis(SymTab symTab) {
+        return myExp.typeAnalysis(symTab);
+    }
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         myExp.unparse(p, 0);
@@ -820,6 +836,10 @@ class PostDecStmtNode extends StmtNode {
         myExp.nameAnalysis(symTab);
     }
 
+    public Type typeAnalysis(SymTab symTab) {
+        return myExp.typeAnalysis(symTab);
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         myExp.unparse(p, 0);
@@ -837,6 +857,20 @@ class IfStmtNode extends StmtNode {
         myStmtList = slist;
     }
 
+    /*
+     * typeAnalysis
+     * Given a symbol table symTab, do:
+     * - process the condition and evaluate if it is a boolean and proper type
+     */
+    @Override
+    public void typeAnalysis(SymTab symTab) {
+        Type condType = myExp.typeAnalysis();
+        if (!condType.isBooleanType()) {
+            ErrMsg.fatal(lineNum, charNum, "Non-boolean expression in if condition");
+        }
+        myDeclList.typeAnalysis(symTab);
+        myStmtList.typeAnalysis(symTab);
+    }
     /****
      * nameAnalysis
      * Given a symbol table symTab, do:
@@ -939,6 +973,14 @@ class IfElseStmtNode extends StmtNode {
         p.println("}"); 
     }
 
+    public Type typeAnalysis(SymTab symTab) {
+        myExp.typeAnalysis(symTab);
+        myThenDeclList.typeAnalysis(symTab);
+        myThenStmtList.typeAnalysis(symTab);
+        myElseDeclList.typeAnalysis(symTab);
+        myElseStmtList.typeAnalysis(symTab);
+    }
+
     // 5 children
     private ExpNode myExp;
     private DeclListNode myThenDeclList;
@@ -976,6 +1018,12 @@ class WhileStmtNode extends StmtNode {
         }
     }
 
+    public Type typeAnalysis(SymTab symTab) {
+        myExp.typeAnalysis(symTab);
+        myDeclList.typeAnalysis(symTab);
+        myStmtList.typeAnalysis(symTab);
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("while (");
@@ -1006,6 +1054,10 @@ class ReadStmtNode extends StmtNode {
         myExp.nameAnalysis(symTab);
     } 
 
+    public Type typeAnalysis(SymTab symTab) {
+        return myExp.typeAnalysis(symTab);
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("input -> ");
@@ -1030,6 +1082,10 @@ class WriteStmtNode extends StmtNode {
         myExp.nameAnalysis(symTab);
     }
 
+    public Type typeAnalysis(SymTab symTab) {
+        return myExp.typeAnalysis(symTab);
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("disp <- (");
@@ -1052,6 +1108,10 @@ class CallStmtNode extends StmtNode {
      ****/
     public void nameAnalysis(SymTab symTab) {
         myCall.nameAnalysis(symTab);
+    }
+
+    public Type typeAnalysis(SymTab symTab) {
+        myCall.typeAnalysis(symTab);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1080,6 +1140,13 @@ class ReturnStmtNode extends StmtNode {
         }
     }
 
+    public Type typeAnalysis(SymTab symTab) {
+        if (myExp != null) {
+            return myExp.typeAnalysis(symTab);
+        }
+        return new VoidType();
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("return");
@@ -1103,6 +1170,9 @@ abstract class ExpNode extends ASTnode {
      * Default version for nodes with no names
      ****/
     public void nameAnalysis(SymTab symTab) { }
+
+    public abstract Type typeAnalysis(SymTab symTab);
+        
 }
 
 class TrueNode extends ExpNode {
@@ -1115,6 +1185,9 @@ class TrueNode extends ExpNode {
         p.print("TRUE");
     }
 
+    public Type typeAnalysis() {
+        return new BooleanType();
+    }
     private int myLineNum;
     private int myCharNum;
 }
@@ -1123,6 +1196,10 @@ class FalseNode extends ExpNode {
     public FalseNode(int lineNum, int charNum) {
         myLineNum = lineNum;
         myCharNum = charNum;
+    }
+
+    public Type typeAnalysis(SymTab symTab) {
+        return new BooleanType();
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1196,6 +1273,31 @@ class IdNode extends ExpNode {
         } 
     }
 
+    @Override
+    /****
+     * typeAnalysis
+     * Given a symbol table symTab, do:
+     * - check for use of undeclared name
+     * - if ok, link to symbol table entry
+     ****/
+    public Type typeAnalysis(SymTab symTab) {
+        try {
+            Sym sym = symTab.lookupGlobal(myStrVal);
+            if (sym == null) {
+                ErrMsg.fatal(myLineNum, myCharNum, "Identifier undeclared");
+                return null;
+            } else {
+                link(sym);
+                return sym.getType();
+            }
+        } catch (SymTabEmptyException ex) {
+            System.err.println("Unexpected SymTabEmptyException " +
+                               " in IdNode.typeAnalysis");
+            System.exit(-1);
+            return new ErrorType();
+        }
+    }
+
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
         if (mySym != null) {
@@ -1216,6 +1318,15 @@ class IntLitNode extends ExpNode {
         myIntVal = intVal;
     }
 
+    /*
+     * typeAnalysis
+     * perform typeAnalysis for this node
+     */
+    @Override
+    public Type typeAnalysis(SymTab symTab) {
+        return new IntegerType();
+    }
+    
     public void unparse(PrintWriter p, int indent) {
         p.print(myIntVal);
     }
@@ -1234,6 +1345,10 @@ class StringLitNode extends ExpNode {
 
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
+    }
+
+    public Type typeAnalysis(SymTab symTab) {
+        return new StringType();
     }
 
     private int myLineNum;
@@ -1368,6 +1483,34 @@ class StructAccessExpNode extends ExpNode {
 				System.exit(-1);
 			} 
         }
+    }
+
+    @Override
+    public Type typeAnalysis(SymTab symTab) {
+        Type locType = myLoc.typeAnalysis(symTab);
+        if (!(locType instanceof StructType)) {
+            ErrMsg.fatal(myLoc.lineNum(), myLoc.charNum(), "Dot-access of non-struct type");
+            badAccess = true;
+            return new ErrorType();
+        }
+
+        StructDefSym structDefSym = ((StructType) locType).type();
+        if (structDefSym == null) {
+            System.err.println("Unexpected null StructDefSym in StructAccessExpNode.typeAnalysis");
+            System.exit(-1);
+            return new ErrorType();
+        }
+    
+        // Look up the field (myId) in the struct's symbol table
+        Sym fieldSym = structDefSym.getSymTab().lookupGlobal(myId.name());
+        if (fieldSym == null) {
+            ErrMsg.fatal(myId.lineNum(), myId.charNum(), "Name of struct field invalid");
+            badAccess = true;
+            return new ErrorType();
+        }
+
+        myId.link(fieldSym);
+        return fieldSym.getType();
     }
 
     // **** unparse ****
