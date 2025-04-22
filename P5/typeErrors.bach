@@ -1,0 +1,118 @@
+boolean bbb.
+struct R [ integer a. ]
+struct R q.
+
+void f[integer p1, boolean p2] [
+]
+
+void main[] [
+    integer aaa.
+
+    # some errors involving illegal operations on functions
+    aaa = f + f.
+    bbb = f == 3.
+    bbb = f > main.
+    bbb = f == f.
+
+    # some errors involving bad function calls 
+    aaa().
+    f().
+    f(5).
+    f(aaa, aaa).
+    f(q, q:a).
+    R().
+
+    # some errors involving structs 
+    q = 5.
+    q = q.
+    input -> R.
+    q = TRUE | 3.
+    bbb = R & q:a.
+
+    # error involving return
+    return 10.
+
+    # other type errors 
+    aaa = aaa + (^FALSE).
+    aaa = aaa + "foo".
+    bbb = aaa.
+
+    # don't give too many or too few error messages here 
+    bbb = (aaa + TRUE) & (bbb < TRUE).
+
+    if (2 > 3) { return.}
+
+    return.
+]
+
+integer f2[integer x, boolean b] [
+    integer y.
+    y = 1.
+    return b + x.
+
+    if (x * 3) {return x.}
+
+    while (b) {x++.b=FALSE.}
+    while (y) {x++.b=FALSE.}
+    return 0.
+    return.
+]
+
+struct Point [
+    integer x.
+    integer y.
+    boolean t.
+    struct R r.
+]
+
+struct P [
+    boolean t.
+    struct R r.
+]
+ void fAdd[integer x, integer y] [
+    struct Point pt.
+    struct Point pt2.
+
+    struct P p.
+
+    disp <- x.
+    disp <- Point.
+    disp <- f2.
+    disp <- pt.
+    disp <- pt:t.
+    disp <- (pt:x + 3).
+    disp <- "test".
+    disp <- "test" + pt:t.
+    disp <- f(4).
+    disp <- f(pt:x, pt:t).
+
+    input -> x.
+    input -> Point.
+    input->f2.
+    input->pt.
+    input->pt:t.input->pt:x.
+
+    pt:x = x + 2* y.
+    pt:r:a = pt:x + pt:y * 3 + pt:t.
+    pt:r:a = pt:x + pt:y * 3.
+    f = f2.
+    f = x + y.
+    Point = R.
+    pt2 = pt.
+    pt = x + y.
+
+    if (f == f2) {pt:x = pt:x * 3.}
+    if (f(3, FALSE) == main()) {return "ERROR".}
+
+    if (Point == R) {return.}
+    if (pt ^= pt2) {return.}
+    if (pt ^= Point) {return.}
+
+    disp <- P + 1.             # P + 1 is an error; the disp is OK
+    x = (TRUE + 3) * 4.        # TRUE + 3 is an error; the * is OK
+    x = TRUE & (FALSE | 3).    # FALSE | 3 is an error; the & is OK
+    x = f2("a" * 4, TRUE).     # "a" * 4 is an error; the call is OK
+    x = 1 + p().               # p() is an error; the + is OK
+    y = (TRUE + 3) == x.       # TRUE + 3 is an error; the == is OK
+                               # regardless of the type of x
+]
