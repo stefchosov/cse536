@@ -55,10 +55,16 @@ public class P5 {
 		
         ((ProgramNode)root.value).nameAnalysis();  // perform name analysis
 
+<<<<<<< HEAD
 	if (!ErrMsg.getErr()) { // If no errors, type check
 	    ((ASTnode)root.value).typeCheck();
 	}
 	    
+=======
+        if (!ErrMsg.getErr()) {  // if no errors, perform type analysis
+            ((ProgramNode)root.value).typeAnalysis();
+        }
+>>>>>>> 56cb858 (final push up)
         if (!ErrMsg.getErr()) {  // if no errors, unparse
             ((ASTnode)root.value).unparse(outFile, 0);
         }
