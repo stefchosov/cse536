@@ -1,0 +1,76 @@
+
+void n[] [ disp <- "\n". ]
+void d[] [ disp <- ":". ]
+
+integer isPythagorasTriple[integer a, integer b, integer c] [
+    return c * c - (a * a + b * b).
+]
+
+integer gcd[integer a, integer b] [
+    while (a ^= b) {
+        if (a == 1 | b == 1) {
+            return 1.
+        }
+        if (a >= b) {
+            a = a - b.
+        }
+        else {
+            b = b - a.
+        }
+    }
+    return a.
+]
+
+void dispTriple[integer a, integer b, integer c] [
+    disp <- a. d(). disp <- b. d(). disp <- c. n().
+]
+
+integer max.
+
+void findTriples[integer c] [
+    integer i.
+    integer j.
+    boolean donei.
+    boolean donej.
+    integer cc.
+    integer csq.
+    integer g.
+
+    i = 2.
+    csq = c * c.
+    donei = FALSE.
+    while (i < c & ^donei) {
+        j = i.
+        donej = FALSE.
+        while (j < c & ^donej) {
+            #dispTriple(i, j, c).
+
+            cc = isPythagorasTriple(i, j, c).
+            if (cc == 0) {
+                g = gcd(i, j).
+                if (g == 1) {
+                    dispTriple(i, j, c).
+                }
+            }
+            donej = cc <= 0.
+            j++.
+        }
+        donei = i * i >= csq. 
+        i++.
+    }
+]
+
+void main[] [
+    integer c.
+    disp <- "Find pythagoras numbers!". disp <- "\n".
+    max = 500.
+    c = 5.
+    while (c < max) {
+        #disp <- c. n().
+        findTriples(c).
+        if (c == 499) {
+            while (TRUE) {}
+        }
+        c++.
+    }
+]

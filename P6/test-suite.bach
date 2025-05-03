@@ -1,0 +1,387 @@
+integer g1.
+integer g2.
+
+boolean b.
+
+void n[] [ disp <- "\n". ]
+
+void d[] [ disp <- ":". ]
+
+void num[integer n] [
+    disp <- n. 
+]
+
+void fLit[] [
+    disp <- "Output literals". n().
+    disp <- TRUE.
+    disp <- "\n".
+
+    disp <- FALSE.
+    disp <- "\n".
+
+    disp <- 55.
+    disp <- "\n".
+    
+    disp <- "Stefan wrote this code!".
+    disp <- "\n".
+
+    disp <- "Add numbers: ".
+    disp <- 55 + 45. disp <- ": 100". disp <- "\n".
+]
+
+void fInt[] [
+    integer a.
+    a = g1.
+    a = a + 1.
+
+    disp <- "Enter function". n().
+    disp <- a + 1. disp <- ": 46". n().
+    disp <- "Exit function". n().
+
+    g1 = a.
+]
+
+void fVar[] [
+    integer a.
+    integer b.
+    integer c.
+
+    disp <- "Store global var: ".
+    g1 = 44.
+    disp <- g1. disp <- ": 44". disp <- "\n".
+
+    disp <- "Function call 1:". n().
+    fInt().
+
+    disp <- g1. disp <- ": 45". disp <- "\n".
+
+    disp <- "Function call 2". n().
+    fInt().
+
+    disp <- "Store local var: ".
+    a = 33.
+    disp <- a. disp <- ": 33". n().
+
+    b = 66.
+
+    disp <- "Add vars: ". 
+    disp <- a + b + 2. disp <- ": 101". disp <- "\n".
+
+    disp <- "Subtract vars: ".
+    b = a + 1.
+    b = b - a.
+    disp <- b. disp <- ": 1". disp <- "\n".
+
+    disp <- "Multiply vars: ".
+    b = 12 * 6.
+    disp <- b. disp <- ": 72". disp <- "\n".
+
+    disp <- "Divide vars: ".
+    b = 36 / 6.
+    disp <- b. disp <- ": 6". disp <- "\n".
+
+    disp <- "Assign in expressions: ".
+    a = 10.
+    c = (b = a + 1) * 2 + 1.
+    disp <- b. disp <- ": 11". disp <- "\n".
+    disp <- c. disp <- ": 23". disp <- "\n".
+]
+
+void fPar[integer p1, integer p2] [
+    integer a.
+
+    disp <- p1. d().
+    disp <- p2. d().
+
+    a = p1 - p2.
+    disp <- a. d().
+
+    disp <- -a. n().
+]
+
+void fParTest[] [
+    disp <- "Function with params". n().
+    fPar(1, 2).
+    disp <- "1 2 -1 1". n().
+
+    fPar(3 * 2, 8 / 2).
+    disp <- "6 4 2 -2". n().
+]
+
+void fInc[integer p1, integer p2] [
+    integer a.
+
+    disp <- "Test post inc/dec". n().
+    num(p2). d().
+    p2++.
+    num(p2). d().
+    p2--.
+    num(p2). n().
+
+    a = p1 * p2 + 1.
+    num(a). d().
+    a++.
+    num(a). d().
+    a--.
+    num(a). n().
+
+    g2 = a + 10.
+    num(g2). d().
+    g2++.
+    num(g2). d().
+    g2--.
+    num(g2). n().
+]
+
+void fIncTest[integer p1] [
+    g1 = p1.
+    g2 = p1 + 2.
+    fInc(g1, g2).
+]
+
+void fBool[boolean b1, boolean b2, integer i1, integer i2] [
+    boolean bTemp.
+    disp <- "Test boolean ops". n().
+
+    bTemp = b2.
+    disp <- bTemp. d().
+
+    bTemp = (i1 == i2).
+    disp <- bTemp. d().
+
+    bTemp = ^(i1 == i2).
+    disp <- bTemp. d().
+
+    bTemp = (i1 ^= i2).
+    disp <- bTemp. n().
+]
+
+void fBoolTest[boolean b] [
+    fBool(b, FALSE, 4, 5).
+
+    fBool(b, TRUE, 5, 5).
+
+    disp <- "Test inequality ops". n().
+    disp <- (2 == 3). disp <- ": (2 == 3):FALSE". n().
+
+    disp <- (2 ^= 3). disp <- ": (2 ^= 3):TRUE". n().
+
+    disp <- (2 < 3). disp <- ": (2 < 3):TRUE". n().
+
+    disp <- (2 >= 3). disp <- ": (2 >= 3):FALSE". n().
+
+    disp <- (2 >= 2). disp <- ": (2 >= 2):TRUE". n().
+
+    disp <- (3 > 2). disp <- ": (3 > 2):TRUE". n().
+
+    disp <- (3 <= 2). disp <- ": (3 <= 2):FALSE". n().
+
+    disp <- (3 <= 3). disp <- ": (3 <= 3):TRUE". n().
+
+    disp <- (TRUE == TRUE). disp <- ": (TRUE == TRUE):TRUE". n().
+
+    disp <- (TRUE ^= TRUE). disp <- ": (TRUE ^= TRUE):FALSE". n().
+
+    disp <- (TRUE ^= FALSE). disp <- ": (TRUE ^= FALSE):TRUE". n().
+
+    disp <- ("TRUE" ^= "FALSE"). disp <- ": (\"TRUE\" ^= \"FALSE\"):TRUE". n().
+
+    disp <- ("TRUE" == "FALSE"). disp <- ": (\"TRUE\" == \"FALSE\"):FALSE". n().
+
+    disp <- ("TRUE" == "TRUE"). disp <- ": (\"TRUE\" == \"TRUE\"):TRUE". n().
+]
+
+integer fRetSimple[integer v] [
+    return v.
+]
+
+integer fRetIf[integer v, boolean b] [
+    integer a.
+    a = 5.
+    if (b) {
+        integer a.
+        disp <- "fRetIf: Execute true branch: ".
+        a = v + 10.
+        return a.
+    }
+    return a.
+]
+
+integer fRetIfElse[integer v, boolean b] [
+    integer a.
+    a = 10.
+    if (^b) {
+        integer a.
+        disp <- "fRetIfElse: Execute true branch: ".
+        a = v + 10.
+        return a.
+    }
+    else {
+        if (v == 4) {
+            integer a.
+            a = 2.
+            return v * a.
+        }
+        else {
+            integer a.
+            disp <- "fRetIfElse: Execute false/false branch: ".
+            a = 3.
+            if (v == 6) {
+                return v * a * 2.
+            }
+        }
+    }
+    disp <- "fRetIfElse: default return: ".
+    return a.
+]
+
+void fRetCondTest[] [
+    integer a.
+    
+    disp <- "Test simple returns". n().
+
+    a  = fRetSimple(2).
+    disp <- a. disp <- ": 2". n().
+
+    disp <- fRetSimple(4). disp <- ": 4". n().
+
+    fRetSimple(3). disp <- ": Ignored return". n().
+
+    disp <- "Test conditional returns". n().
+
+    disp <- fRetIf(4, TRUE). disp <- ": 14". n().
+
+    disp <- fRetIf(4, FALSE). disp <- ": 5". n().
+
+    disp <- fRetIfElse(4, FALSE). disp <- ": 14". n().
+
+    disp <- fRetIfElse(4, TRUE). disp <- ": 8". n().
+
+    disp <- fRetIfElse(6, TRUE). disp <- ": 36". n().
+
+    disp <- fRetIfElse(8, TRUE). disp <- ": 10". n().
+]
+
+integer fWhile[integer start, integer end, boolean mult] [
+    integer temp.
+    integer sum.
+    sum = 0.
+    if (mult) {
+        sum = 1.
+    }
+    temp = start.
+    while (temp < end) {
+        disp <- temp. disp <- " ".
+        if (mult) {
+            sum = sum * temp.
+        }
+        else {
+            sum = sum + temp.
+        }
+        temp++.
+    }
+    return sum.
+]
+
+void fWhileTest[] [
+    integer res.
+
+    disp <- "Sum: ". res = fWhile(1, 7, FALSE).
+    d(). disp <- res. d(). disp <- "21". n().
+
+    disp <- "Sum: ". res = fWhile(4, 9, FALSE).
+    d(). disp <- res. d(). disp <- "30". n().
+
+    disp <- "Product: ". res = fWhile(1, 9, TRUE).
+    d(). disp <- res. d(). disp <- "40320". n().
+]
+
+boolean enableReadTest.
+
+void fReadTest[] [
+    integer a.
+    integer b.
+    boolean m.
+    boolean oneAgain.
+
+    if (^enableReadTest) {
+        return.
+    }
+
+    oneAgain = TRUE.
+    while (oneAgain) {
+        integer res.
+
+        disp <- "Enter first number: ". n(). input -> a.
+        if (a <= 0) {
+            return.
+        }
+        disp <- "Enter second number: ". n(). input -> b.
+        if (b <= 0) {
+            return.
+        }
+        disp <- "Enter boolean for op: ". n(). input -> m. 
+        disp <- a. d(). disp <- b. d(). disp <- m. n(). 
+        res = fWhile(a, b, m).
+        disp <- "Result: ". disp <- res. n().
+    }
+]
+
+boolean fBoolIsCalled[boolean b] [
+    disp <- "fBool called: ".
+    return b.
+]
+
+void fAndOrTest[] [
+    disp <- "Test complex condition evaluation". n().
+
+    disp <- "fBool should be called: ".
+    disp <- (2 ^= 3) & fBoolIsCalled(TRUE). n().
+    disp <- "Expected: ". disp <- "TRUE". n().
+    disp <- "fBool should be called: ".
+    disp <- (2 ^= 3) & fBoolIsCalled(FALSE). n().
+    disp <- "Expected: ". disp <- "FALSE". n().
+    disp <- "fBool shouldn't be called: ".
+    disp <- (2 == 3) & fBoolIsCalled(TRUE). n().
+    disp <- "Expected: ". disp <- "FALSE". n().
+
+    disp <- "fBool shouldn't be called: ".
+    disp <- (2 ^= 3) | fBoolIsCalled(TRUE). n().
+    disp <- "Expected: ". disp <- "TRUE". n().
+    disp <- "fBool should be called: ".
+    disp <- (2 == 3) | fBoolIsCalled(TRUE). n().
+    disp <- "Expected: ". disp <- "TRUE". n().
+    disp <- "fBool should be called: ".
+    disp <- (2 == 3) | fBoolIsCalled(FALSE). n().
+    disp <- "Expected: ". disp <- "FALSE". n().
+]
+
+void main[] [
+    disp <- "Test suite of bach features!".
+    disp <- "\n".
+
+    fLit().
+
+    fVar().
+
+    fParTest().
+
+    fIncTest(3).
+
+    fIncTest(5).
+
+    fBoolTest(TRUE).
+
+    fRetCondTest().
+
+    fWhileTest().
+
+    # one can enable the read test when desired
+    # usually it waits for input which is not needed in most situations.
+    enableReadTest = FALSE.
+    fReadTest().
+
+    fAndOrTest().
+
+    disp <- "The end.". n().
+]

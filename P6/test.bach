@@ -1,0 +1,115 @@
+integer prime1.
+integer prime2.
+
+void n[] [ disp <- "\n". ]
+void d[] [ disp <- ":". ]
+
+integer rem[integer n1, integer n2] [
+    return n1 - (((n1 / n2) * n2)).
+]
+
+void remTest[] [
+    disp <- rem(12, 5). d().
+    #disp <- rem(2, 1). d().
+    #disp <- rem(3, 2). d().
+    #disp <- rem(6, 2). n().
+    #disp <- rem(25, 6). n().
+    #disp <- rem(25, 5). n().
+]
+
+boolean isPrime[integer n] [
+    integer i.
+    integer c.
+
+    if (n == prime1 | n == prime2) {
+        return TRUE.
+    }
+
+    if (rem(n, prime1) == 0) {
+        return FALSE.
+    }
+    if (rem(n, prime2) == 0) {
+        return FALSE.
+    }
+
+    c = n / 2 + 1.
+    i = prime2 + 1.
+    while (i < c) {
+        if (rem(n,i) == 0) {
+            return FALSE.
+        }
+        i++.
+    }
+
+    return TRUE.
+]
+
+void isPrimeTest[] [
+    integer i.
+    integer c.
+
+    c = 1000.
+    i = 2.
+    while (i < c) {
+        if (isPrime(i)) {
+            if (i ^= prime1) { d(). }
+            disp <- i.
+        }
+        i++.
+    }
+    n().
+]
+
+boolean isPrimePair[integer n1, integer n2] [
+    return isPrime(n1) & isPrime(n2).
+]
+
+integer max.
+
+void findPrimePairs[integer diff] [
+    integer c.
+    boolean first.
+    integer count.
+
+    first = TRUE.
+    disp <- "*[". disp <- diff. disp <- "]*".
+    c = prime2.
+    count = 0.
+    while (c < max) {
+        if (isPrimePair(c, c + diff)) {
+            count++.
+            if (^first) {
+                #disp <- " : ".
+            }
+            else {
+                first = FALSE.
+            }
+            #disp <- c. d(). disp <- c + diff.
+        }
+        c = c + 2.
+    }
+    
+    disp <- " *[". disp <- count. disp <- "]*".
+    n().
+]
+
+void main[] [
+    integer diff.
+    disp <- "Primes and pairs of primes!".
+    disp <- "\n".
+
+    prime1 = 2.
+    prime2 = 3.
+    max = 1000.
+
+    remTest().
+    #isPrimeTest().
+    diff = 2.
+    while (diff < 200) {
+        findPrimePairs(diff).
+        diff = diff + 2.
+        if (diff == 50) {
+            #while (TRUE) {}
+        }
+    }
+]
